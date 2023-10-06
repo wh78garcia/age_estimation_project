@@ -7,6 +7,57 @@ from argparse import ArgumentParser
 from ibug.face_detection import RetinaFacePredictor
 from ibug.age_estimation import DEX
 
+def test_CA(age2, age_p2):
+    age2 = np.array(age2)
+    age_p2 = np.array(age_p2)
+    CA3=0
+    CA5=0
+    CA7=0
+    CA9=0
+
+    CA3_without_0_18=0
+    CA5_without_0_18=0
+    CA7_without_0_18=0
+    CA9_without_0_18=0
+    count_without_0_18 = 0
+
+    for i in range(0,len(age2)):
+      error=np.absolute(age2[i]-age_p2[i])
+      if age2[i] >= 18:
+        count_without_0_18 += 1
+        if error<=3:
+          CA3_without_0_18+=1
+        if error<=5:
+          CA5_without_0_18+=1
+        if error<=7:
+          CA7_without_0_18+=1
+        if error<=9:
+          CA9_without_0_18+=1
+
+      if age2[i]>=-1:
+        if error<=3:
+          CA3+=1
+        if error<=5:
+          CA5+=1
+        if error<=7:
+          CA7+=1
+        if error<=9:
+          CA9+=1
+
+    CA3/=len(age2[age2>=-1])
+    CA5/=len(age2[age2>=-1])
+    CA7/=len(age2[age2>=-1])
+    CA9/=len(age2[age2>=-1])
+
+    CA3_without_0_18/=count_without_0_18
+    CA5_without_0_18/=count_without_0_18
+    CA7_without_0_18/=count_without_0_18
+    CA9_without_0_18/=count_without_0_18
+
+    print('number of all: {}, number witout 0-17: {}'.format(len(age2[age2>=-1]), count_without_0_18))
+    print('CA3: ',CA3,'\nCA5: ',CA5,'\nCA7: ',CA7,'\nCA9: ',CA9)
+    print('CA3_without_0_18: ',CA3_without_0_18,'\nCA5_without_0_18: ',CA5_without_0_18,'\nCA7_without_0_18: ',CA7_without_0_18,'\nCA9_without_0_18: ',CA9_without_0_18)
+
 
 def main() -> None:
     # Parse command-line arguments
