@@ -65,7 +65,7 @@ def test_CA(age2, age_p2):
 def main() -> None:
     # Parse command-line arguments
     parser = ArgumentParser()
-    parser.add_argument("--input_path", "-i", help="Input images path", type=str, default='/Users/wanghui/Desktop/6-work/D24H-fulltime/work/14-age_woman/UTKFace_3part_onlyAsianWomen')
+    parser.add_argument("--input_path", "-i", help="Input images path", type=str, default='/home/d24h_prog1/Mia/age_woman/UTKFace_3part_onlyAsianWomen')
     parser.add_argument("--output", "-o", help="Output file path", default=None)
     parser.add_argument(
         "--benchmark",

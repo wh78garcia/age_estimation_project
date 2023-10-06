@@ -63,7 +63,7 @@ def main() -> None:
     # Parse command-line arguments
     parser = ArgumentParser()
     parser.add_argument(
-        "--input_path", "-i", help="Input video path or webcam index (default=0)", type=str, default='/Users/wanghui/Desktop/6-work/D24H-fulltime/work/14-age_woman/UTKFace_3part_onlyAsianWomen'
+        "--input_path", "-i", help="Input video path or webcam index (default=0)", type=str, default='/home/d24h_prog1/Mia/age_woman/UTKFace_3part_onlyAsianWomen'
     )
     parser.add_argument("--output", "-o", help="Output file path", default=None)
 
@@ -131,25 +131,31 @@ def main() -> None:
     )
 
     print("Face detector created using RetinaFace.")
-
+    print(args)
     prediected_age_list = []
     ground_truth_list = []
     for image_name in os.listdir(args.input_path):
-        name_split = image_name.split('_')
-        if name_split[1] == '1' and name_split[2] == '2':
-            image = cv2.imread(os.path.join(args.input_path, image_name))
-
-            faces = face_detector(image, rgb=False)
-            if len(faces) == 0:
+        if 'UTKFace' in args.input_path:
+            name_split = image_name.split('_')
+            if name_split[1] == '1' and name_split[2] == '2':
+                image = cv2.imread(os.path.join(args.input_path, image_name))
+                ground_truth_age = int(name_split[0])
+            else:
                 continue
-            # Parse faces
-            # print(image.shape, faces.shape) # (115, 204, 3) (1, 15)
-            age = age_estimator.predict_img(image, faces, rgb=False)
-            # print(age.shape) # torch.Size([1])
-            # print(int(age.item())) # 20
-            for a in age:
-                prediected_age_list.append(int(a.item()))
-                ground_truth_list.append(int(name_split[0]))
+        else:
+            image = cv2.imread(os.path.join(args.input_path, image_name))
+            ground_truth_age = int(image_name.split('.')[0].split('_')[-1])
+        faces = face_detector(image, rgb=False)
+        if len(faces) == 0:
+            continue
+        # Parse faces
+        # print(image.shape, faces.shape) # (115, 204, 3) (1, 15)
+        age = age_estimator.predict_img(image, faces, rgb=False)
+        # print(age.shape) # torch.Size([1])
+        # print(int(age.item())) # 20
+        for a in age:
+            prediected_age_list.append(int(a.item()))
+            ground_truth_list.append(ground_truth_age)
 
     print(ground_truth_list[:10], prediected_age_list[:10])
     test_CA(ground_truth_list, prediected_age_list)
