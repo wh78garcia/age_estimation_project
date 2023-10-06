@@ -95,7 +95,6 @@ class DEX(nn.Module):
         h, w = img.shape[:2]
 
         num_faces = len(bboxes)
-
         if self.warping == "roi-tp":
             imgs = [
                 ref.roi_tanh_polar_warp(img, b, *self.sz, keep_aspect_ratio=True)
