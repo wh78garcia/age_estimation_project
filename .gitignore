@@ -1,4 +1,5 @@
 .vscode
 *.egg-info
+*.tar
 .DS_Store
 *.log
